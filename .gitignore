@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.json
+note.ipynb
+lightning_logs
+simplet5
+wandb
+nohup.out
+train
+data
+outputs
+.git_back
+trained_model
+config_idclab.py

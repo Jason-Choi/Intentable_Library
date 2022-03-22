@@ -1,0 +1,4 @@
+Scrapy==2.5.1
+scrapy-fake-useragent==1.4.4
+scrapy-rotating-proxies==0.6.2
+SQLAlchemy==1.4.31

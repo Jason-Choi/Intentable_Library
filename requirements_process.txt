@@ -1,0 +1,5 @@
+flair==0.10
+inflect==5.4.0
+pydantic
+nltk==3.7
+pydantic==1.8.2
