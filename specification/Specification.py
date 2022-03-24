@@ -27,8 +27,6 @@ class Specification():
     def __init__(self, dataset: Union[Dataset, Dict]):
         if type(dataset) == type(dict()):
             self.init_with_json(dataset)
-        elif type(dataset) == type(Input()):
-            self.init_with_api(dataset)
         else:
             self.init_with_schema(dataset)
 

@@ -10,11 +10,11 @@ from typing import List, Dict
 from specification import Specification as DemoSpecification
 from fastapi.middleware.cors import CORSMiddleware
 origins = ["*"]
-model = SimpleT5()
+# model = SimpleT5()
 
 
-modelname = "trained_model"
-model.load_model("t5", f"{modelname}", use_gpu=True)
+# modelname = "trained_model"
+# model.load_model("t5", f"{modelname}", use_gpu=True)
 
 
 class Input(BaseModel):
@@ -93,7 +93,7 @@ async def demo():
 async def demo():
     sample = train_set.sample(1)
     sample_table = sample['table'].iloc[0]
-    sample_table = pd.read_csv(io.StringIO(table), header=0, index_col=0)
+    sample_table = pd.read_csv(io.StringIO(sample_table), header=0, index_col=0)
 
     table = []
     for index, row in sample_table.iterrows():
