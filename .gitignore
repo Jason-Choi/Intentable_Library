@@ -12,3 +12,6 @@ outputs
 .git_back
 trained_model
 config_idclab.py
+data2
+grammar
+specification_legacy

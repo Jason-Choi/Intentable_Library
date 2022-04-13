@@ -35,6 +35,8 @@ def percent_formatter(input_entity: str) -> List[str]:
     formatted_numbers += [f"{abs(float(i))}%" for i in nomal_number_formatter(input_entity)]
     formatted_numbers.append(f"{number_to_word(int(round(float(input_entity),0)))}%")
     formatted_numbers.append(f"{number_to_word(abs(int(round(float(input_entity), 0))))}%")
+    formatted_numbers.append(f"{number_to_word(int(float(input_entity)))}%")
+    formatted_numbers.append(f"{number_to_word(abs(int(float(input_entity))))}%")
     formatted_numbers += [f"{i}" for i in nomal_number_formatter(input_entity)]
     formatted_numbers += [f"{abs(float(i))}" for i in nomal_number_formatter(input_entity)]
     return formatted_numbers
@@ -46,6 +48,7 @@ def big_number_formatter(real_entity: float) -> List[str]:
     for word, number in big_number_dict.items():
         if real_entity // number >= 1:
             foramtted_numbers.append(f"{number_to_word(int(real_entity // number))} {word}")
+            foramtted_numbers.append(f"{int(real_entity / (number*10)) * 10} {word}")
             foramtted_numbers.append(f"{real_entity / number:,.0f} {word}")
             foramtted_numbers.append(f"{real_entity / number:,.1f} {word}")
             foramtted_numbers.append(f"{real_entity / number:,.2f} {word}")
@@ -54,7 +57,7 @@ def big_number_formatter(real_entity: float) -> List[str]:
 
 
 def nomal_number_formatter(input_entity: str) -> List[str]:
-    formatted_entities: List[str] = []
+    formatted_entities: List[str] = [input_entity]
     real_entity = float(input_entity)
 
     if "." in input_entity:
