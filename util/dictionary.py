@@ -3,10 +3,10 @@ from typing import Tuple
 from util.dto import *
 
 
-class summaryDict:
+class overviewDict:
     first: Tuple[str] = ('This', 'The')
     second: Tuple[str] = ('bar', 'pie', 'line', 'chart', 'statistic', 'graph', 'survey', 'timeline', 'figure')
-    third: Tuple[str] = ('shows', 'depicts', 'displays', 'illustrates', 'represents', 'presents', 'reveals', 'follow', 'refer')
+    third: Tuple[str] = ('shows', 'gives', 'depicts', 'displays', 'illustrates', 'represents', 'presents', 'reveals', 'follow', 'refer')
 
 
 class diffDict:
@@ -14,7 +14,7 @@ class diffDict:
         'increased', 'increase', 'increasing', 'increases',
         'up from', 'risen up', 'grew',  'gone up', 'growth',
         'growing', 'rose', 'rising', 'gained', 'gaining',
-        'bigger', 'higher', 'rise from'
+        'bigger', 'higher', 'rise from', "grow", 'increment'
     )
 
     less: Tuple[str] = (
@@ -26,7 +26,7 @@ class diffDict:
         'drop', 'dropped', 'dropping',
         'decline', 'declining', 'declined', 'declines',
         'diminished', 'diminishing', 'diminished',
-        'reduce', 'fallen'
+        'reduce', 'fallen', 'decrement'
     )
 
     variety: Tuple[str] = (
@@ -44,7 +44,8 @@ class appendDict:
         "These were",
         "These are",
         "Those are",
-        "Those were",       
+        "Those were",      
+        'This represent' 
     )
 
 
@@ -76,23 +77,25 @@ class compareDict:
         'compare', 'compared', 'comparing', 'comparison', 'comparisons',
     )
     prev_year: Tuple[str] = (
-        'previous year', 'year earlier', 'quarter of the previous year', "prior year"
+        'previous year', 'year earlier', 'quarter of the previous year', "prior year",
+        'the year prior', 'previous quarter', 'the quarter prior', 'the quarter before',
     )
     next_year: Tuple[str] = (
         'following year', 'year later', 'quarter of the following year',
+        'following quarter', 'the year following', 'next quarter', 'the quarter after',
     )
 
 
-def is_summary(sentence: str):
+def is_overview(sentence: str):
     if sentence.startswith("How") and sentence.endswith("?"):
-        return "question"
-    if not any(word in sentence for word in summaryDict.first):
+        return "overview"
+    if not any(word in sentence for word in overviewDict.first):
         return False
-    if not any(word in sentence.lower() for word in summaryDict.second):
+    if not any(word in sentence.lower() for word in overviewDict.second):
         return False
-    if not any(word in sentence.lower() for word in summaryDict.third):
+    if not any(word in sentence.lower() for word in overviewDict.third):
         return False
-    return "describe"
+    return "overview"
 
 
 def has_keyword(dict : Union[trendDict, compareDict], sentence: str):
@@ -117,7 +120,7 @@ def has_prev_year(sentence: str):
 
 
 def is_append(sentence: str):
-    if sentence.startswith(appendDict.first) and not is_summary(sentence):
+    if sentence.startswith(appendDict.first) and not is_overview(sentence):
         return True
     else:
         return False
@@ -159,8 +162,8 @@ def has_period(sentence: str):
     if any(word in sentence.lower() for word in trendDict.sinceKeyword):
         return 'since'
     elif any(word in sentence.lower() for word in trendDict.forKeyword):
-        return 'for'
+        return 'during'
     elif any(word in sentence.lower() for word in trendDict.beforeKeyword):
-        return 'before'
+        return 'until'
     else:
         return False

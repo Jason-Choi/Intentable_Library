@@ -5,9 +5,8 @@ note.ipynb
 lightning_logs
 simplet5
 wandb
-nohup.out
 train
-data
+data*
 outputs
 .git_back
 trained_model
@@ -15,3 +14,5 @@ config_idclab.py
 data2
 grammar
 specification_legacy
+*.out
+tr2.py

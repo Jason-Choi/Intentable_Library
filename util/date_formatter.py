@@ -35,6 +35,29 @@ Is Fiscal Year : {self.is_fiscal_year}\n'
                 n += 1
         return n
 
+    def is_bigger(self, other: 'DateInformation') -> bool:
+        if self.year and other.year and self.year < other.year:
+            return False
+        elif self.year and other.year and self.year > other.year:
+            return True
+        
+        if self.month and other.month and self.month < other.month:
+            return False
+        elif self.month and other.month and self.month > other.month:
+            return True
+
+        if self.quarter and other.quarter and self.quarter < other.quarter:
+            return False
+        elif self.quarter and other.quarter and self.quarter > other.quarter:
+            return True
+
+        if self.half and other.half and self.half < other.half:
+            return False
+        elif self.half and other.half and self.half > other.half:
+            return True
+
+        return False
+
 
 def yy_to_yyyy(yy: str) -> int:
     if len(yy) == 4:
@@ -308,9 +331,6 @@ def extract_date(date: str) -> List[DateInformation]:
         return [extracted_date]
 
 
-"""
-fiscal year 구현해야함 
-"""
 
 fiscal_strings = ["fy", "fiscal", "fiscal year"]
 
@@ -497,11 +517,13 @@ def date_object_to_strings(date_object: DateInformation) -> List[str]:
 
 
 
+
 def date_formatter(date : str) -> List[str]:
     """
     Takes a date string and returns a list of possible date formats
     """
     output: List[str] = [date]
+    date = str(date)
 
     for period_symbol in period_symbols:
         if period_symbol in date:

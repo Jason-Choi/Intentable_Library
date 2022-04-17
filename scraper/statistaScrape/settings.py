@@ -26,7 +26,7 @@ SPIDER_MODULES = ['statistaScrape.spiders']
 NEWSPIDER_MODULE = 'statistaScrape.spiders'
 
 
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
+# Crawl responsibly by describeing yourself (and your website) on the user-agent
 #USER_AGENT = 'statistaScrape (+http://www.yourdomain.com)'
 FAKEUSERAGENT_PROVIDERS = [
     'scrapy_fake_useragent.providers.FakeUserAgentProvider',  # this is the first provider we'll try

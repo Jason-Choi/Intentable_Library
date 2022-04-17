@@ -21,15 +21,15 @@ def worker(datas : List[Dict[str, str]]) -> None:
         try:
             spec : Specification = Specification(data)
             for intent in spec.intent_objects:
-                if intent.action == "identify" and intent.type == "one":
+                if intent.action == "describe one":
                     counter.id1 += 1
-                elif intent.action == "identify" and intent.type == "two":
+                elif intent.action == "describe two":
                     counter.id2 += 1
                 elif intent.action == "compare":
                     counter.cmp += 1
-                elif intent.action == "discover":
+                elif intent.action == "trend":
                     counter.dis += 1
-                elif intent.action == "summary":
+                elif intent.action == "overview":
                     counter.smr += 1
         except:
             pass
