@@ -30,6 +30,8 @@ class Specification():
             self.column_names[0] = "value"
             self.table.columns = self.column_names
         self.row_names = self.table.index.tolist()
+        self.objs = []
+        self.e2es = None
 
 
 
@@ -58,6 +60,40 @@ class Specification():
                 if recipe.is_complte():
                     self.recipes.append(recipe)
 
+        # Linearize Data
+        linearized_table = []
+
+        for series_index in range(len(self.table.columns)):
+            for key_index in range(len(self.table.index)):
+                if self.column_number != 1:
+                    linearized_table.append(
+                        (
+                            self.column_names[series_index],
+                            self.row_names[key_index],
+                            self.table.iloc[key_index, series_index]
+                        )
+                    )
+                else:
+                    linearized_table.append(
+                        (
+                            self.row_names[key_index],
+                            self.table.iloc[key_index, series_index]
+                        )
+                    )
+                    
+        self.linearized_table = str(linearized_table)
+        self.e2ecaption = " ".join([intent.caption for intent in self.intent_objects])
+
+        self.e2erecipe = E2ERecipe(
+            chart_type=self.chart_type,
+            title=self.title,
+            unit=self.unit,
+            datas=linearized_table,
+            caption=self.e2ecaption
+        )
+
+
+
     def get_intent_from_sentence(self, sentence: str) -> Intent:
         intent = Intent(caption=sentence)
         overviewType = is_overview(sentence)
@@ -80,49 +116,25 @@ class Specification():
         if diff_keyword:
             if self.row_type != "DATE" or has_compare_keyword:
                 intent.action = "compare"
-                intent.relation = diff_keyword
             elif has_trend_keyword or period_keyword:
                 intent.action = "trend"
             elif len(targets) > 0:
                 intent.action = "compare"
-                intent.relation = diff_keyword
             else:
                 intent.action = "trend"
 
-            # If Compare, One Target, DATE in X-AXIS, Find Previous, Following Year
-            if intent.action == 'compare' and len(targets) == 1 and self.row_type == "DATE":
-                if has_next_year(sentence):
-                    key = targets[0].key
-                    series = targets[0].series
-                    column : List[Target]= self.target_list[series]
-                    for i in range(column):
-                        if column[i].key == key:
-                            targets.append(
-                                column[i+1]
-                            )
-                            break
-                else:
-                    key = targets[0].key
-                    series = targets[0].series
-                    column: List[Target] = self.target_list[series]
-                    for i in range(len(column)):
-                        if i>1 and column[i].key == key:
-                            targets.append(
-                                column[i-1]
-                            )
-                            break
-
-
             # Compare target value and change to describe if target value is same
             if intent.action == 'compare' and len(targets) == 2:
-                if intent.relation == "greater" and (targets[0].value > targets[1].value):
+                if diff_keyword == "greater" and (targets[0].value > targets[1].value):
                     targets[0], targets[1] = targets[1], targets[0]
-                elif intent.relation == "less" and (targets[0].value < targets[1].value):
+                elif diff_keyword == "less" and (targets[0].value < targets[1].value):
                     targets[0], targets[1] = targets[1], targets[0]
                 elif targets[0].value == targets[1].value:
                     intent.action = "describe"
-                    intent.relation = None
-                    
+
+
+            if intent.action == 'compare' and len(targets) == 2:
+                intent.diff = self.get_diffrence_of_target_values(targets)
 
             # Extract year keys and series from trend
             # find max year and min year
@@ -131,8 +143,6 @@ class Specification():
                 years = self.row_names
                 targets: List[Target] = []
                 relations: List[str]  = []
-
-
                 
                 targets_series: str = 'value'
                 for s in self.column_names:
@@ -148,7 +158,7 @@ class Specification():
                         if is_token_includes(sentence.lower(), str(date_string)):
                             extracted_date.append(year)
                 
-                extracted_date = sorted(target_dates, key=lambda x: years.index(year))
+                extracted_date = sorted(target_dates, key=lambda x: years.index(x))
 
                 if len(extracted_date) == 0:
                     targets = all_target_list
@@ -166,16 +176,8 @@ class Specification():
                 else:
                     targets = [all_target_list[years.index(extracted_date[0]):years.index(extracted_date[1])+1]]
                 
-
-                for i in range(len(targets)-1):
-                    if targets[i].value == targets[i+1].value:
-                        relations.append("equal")
-                    elif targets[i].value > targets[i+1].value:
-                        relations.append("less")
-                    else:
-                        relations.append("greater")
-
-                intent.relations = relations
+                intent.diff = self.get_diffrence_of_target_values(targets)
+                targets = [targets[0], targets[-1]]
             
             intent.targets = targets
 
@@ -215,6 +217,19 @@ class Specification():
         elif self.mark == 'pie':
             return "pie"
 
+    def get_diffrence_of_target_values(self, targets: List[Target]) -> List[str]:
+        diff_list : List[str] = []
+        for i in range(len(targets)-1):
+            sub = targets[i+1].value - targets[i].value
+            # if sub is integer
+            if sub == 0:
+                diff_list.append("0")
+            elif sub == int(sub):
+                diff_list.append("%+d" % sub)
+            else:
+                diff_list.append("%+.2f" % sub)
+        return diff_list
+
     def print_information(self):
         print()
         display(HTML(f"""<a href="https://www.statista.com/statistics/{self.id}">Statista Link</a>"""))
@@ -228,6 +243,8 @@ class Specification():
         # print(self.featured_element_list)
         # print(self.element_list)
         print(self.paragraph)
-        for recipe in self.recipes:
-            recipe.print_recipe()
+        # for recipe in self.recipes:
+        #     recipe.print_recipe()
+
+        print(self.e2erecipe.get())
         print(self.table)

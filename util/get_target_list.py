@@ -39,6 +39,7 @@ def get_target_list(table: DataFrame, value_type: str) -> List[Target]:
         column_target_list: List[Target] = []
         for j in range(len(table.index)):
             column_target_list.append(
+                
                 Target(
                     value=table.iloc[j, i],
                     key=str(table.index[j]),
@@ -47,5 +48,6 @@ def get_target_list(table: DataFrame, value_type: str) -> List[Target]:
                 )
             )
         column_target_lists.append(column_target_list)
+        
     
     return dict(zip(column_name, column_target_lists))
