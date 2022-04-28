@@ -62,10 +62,10 @@ class Intent:
         return self.action == "describe" and len(self.targets) > 0
 
     def is_compare(self) -> bool:
-        return self.action == "compare" and len(self.targets) == 2
+        return self.action == "compare" and len(self.targets) == 2 and len(self.diff) == 1
 
     def is_trend(self) -> bool:
-        return self.action == "trend" and len(self.targets) == 2
+        return self.action == "trend" and len(self.targets) == 2 and len(self.diff) > 0
 
     def is_complete(self) -> bool:
         if self.is_overview() or self.is_describe() or self.is_compare() or self.is_trend():
@@ -83,10 +83,10 @@ class Intent:
             obj["targets"] = [t.get() for t in self.targets]
         elif self.is_compare():
             obj["targets"] = [t.get() for t in self.targets]
-            # obj["diff"] = self.diff
+            obj["diff"] = self.diff
         elif self.is_trend():
             obj["targets"] = [t.get() for t in self.targets]
-            # obj["diff"] = self.diff
+            obj["diff"] = self.diff
         else:
             return None
         return obj

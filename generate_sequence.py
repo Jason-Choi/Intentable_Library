@@ -12,7 +12,7 @@ import os
 import argparse
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--data_folder", type=str, default="data_e2e")
+parser.add_argument("--data_folder", type=str, default="data_e2e2")
 
 args = parser.parse_args()
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     data_schemas: List[Dict[str, str]] = []
     with open(f"./data/statista.json", "r") as f:
-        data_schemas = json.load(f)
+        data_schemas = json.load(f)[0:100]
 
     limit = len(data_schemas) // (corenum - 1)
     splited_data = [data_schemas[i*limit: (i+1)*limit] for i in range(corenum)]
