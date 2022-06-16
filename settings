@@ -1,5 +1,0 @@
-[default]
-entity = jason-choi
-project = vis-to-text
-base_url = https://api.wandb.ai
-
